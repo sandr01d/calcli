@@ -1,7 +1,10 @@
 #![warn(clippy::pedantic)]
 
 use clap::Parser;
-use std::io::{self, Write};
+use std::{
+    io::{self, Write},
+    time::Instant,
+};
 
 mod exercise;
 use exercise::Excercise;
@@ -29,24 +32,33 @@ pub struct Cli {
 pub fn run(args: &Cli) -> io::Result<()> {
     let mut rng = rand::thread_rng();
     let mut exercises = Vec::with_capacity(args.count);
-    // TODO measure time!
+    let now = Instant::now();
     for _ in 0..args.count {
         // Generate random exercise
         let mut ex = Excercise::new(&mut rng, args.min, args.max);
         ask(&mut ex)?;
         exercises.push(ex);
     }
+    let duration = now.elapsed();
 
     println!("\n\x1B[1m === Results ===\x1B[22m\n");
+    let mut correct = 0;
     for ex in exercises {
         let result = ex.result();
         // TODO pretty print
         if result == ex.answer {
+            correct += 1;
             println!("{} {} ✅", ex.question(), result);
         } else {
             println!("{} {} ❌ ({})", ex.question(), result, ex.answer);
         }
     }
+    println!(
+        "\n{correct}/{} correct, in {}.{}s",
+        args.count,
+        duration.as_secs(),
+        duration.subsec_millis()
+    );
     Ok(())
 }
 
