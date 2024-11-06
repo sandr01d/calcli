@@ -3,7 +3,11 @@
 use clap::Parser;
 use std::{
     io::{self, Write},
-    time::Instant,
+    time::{Duration, Instant},
+};
+use tabled::{
+    builder::Builder,
+    settings::{Alignment, Style, Width},
 };
 
 mod exercise;
@@ -40,37 +44,71 @@ pub fn run(args: &Cli) -> io::Result<()> {
         exercises.push(ex);
     }
     let duration = now.elapsed();
+    print_results(&exercises, duration);
+    Ok(())
+}
 
-    println!("\n\x1B[1m === Results ===\x1B[22m\n");
+/// Prints the results of the run in a table
+fn print_results(exercises: &Vec<Excercise>, duration: Duration) {
+    // number of correct responses
     let mut correct = 0;
+
+    // builder for the header
+    let mut builder = Builder::default();
+    // ansi escope codes are for bold text
+    builder.push_record(["\x1B[1mResults\x1B[22m"]);
+    let mut header = builder.build();
+
+    // builder for the table
+    let mut builder = Builder::default();
+    builder.push_record(["Exercise", "Solution", "Outcome", "Response"]);
+
+    // fill the table
     for ex in exercises {
-        let result = ex.result();
-        // TODO pretty print
-        if result == ex.answer {
+        let solution = ex.solve();
+        let icon = if solution == ex.response {
             correct += 1;
-            println!("{} {} ✅", ex.question(), result);
+            String::from("✅")
         } else {
-            println!("{} {} ❌ ({})", ex.question(), result, ex.answer);
-        }
+            String::from("❌")
+        };
+        builder.push_record([
+            ex.question(),
+            solution.to_string(),
+            icon,
+            ex.response.to_string(),
+        ]);
     }
+
+    let mut table = builder.build();
+    table.with(Style::rounded());
+
+    // styling header after the table because we want to make it the same width
+    header
+        .with(Style::extended())
+        .with(Width::increase(table.total_width()))
+        .with(Alignment::center());
+
+    println!();
+    println!("{header}");
+    println!("{table}");
     println!(
         "\n{correct}/{} correct, in {}.{}s",
-        args.count,
+        exercises.len(),
         duration.as_secs(),
         duration.subsec_millis()
     );
-    Ok(())
 }
 
 /// Prints out the question for the `exercise` and reads an answer to it from stdin.
 fn ask(exercise: &mut Excercise) -> io::Result<()> {
     let mut buf = String::new();
-    print!("{} ", exercise.question());
+    print!("{}  ", exercise.question());
     io::stdout().flush()?;
     io::stdin().read_line(&mut buf)?;
     // parse() can return an error, e.g. when letters where entered
     match buf.trim().parse() {
-        Ok(i) => exercise.answer = i,
+        Ok(i) => exercise.response = i,
         Err(e) => {
             eprintln!("Input invalid: {e}");
             return ask(exercise);

@@ -11,7 +11,7 @@ pub struct Excercise {
     /// Operation
     op: Operation,
     /// Answer provided by the user
-    pub answer: i32,
+    pub response: i32,
 }
 
 impl Excercise {
@@ -28,17 +28,17 @@ impl Excercise {
             lhs,
             rhs,
             op,
-            answer: 0,
+            response: 0,
         }
     }
 
     /// The question, as displayed to the user
     pub fn question(&self) -> String {
-        format!("{} {} {} =", &self.lhs, &self.op, &self.rhs)
+        format!("{:2}  {}  {:2}  =", &self.lhs, &self.op, &self.rhs)
     }
 
     /// The correct result of the exercise
-    pub fn result(&self) -> i32 {
+    pub fn solve(&self) -> i32 {
         let lhs = i32::from(self.lhs);
         let rhs = i32::from(self.rhs);
         match &self.op {

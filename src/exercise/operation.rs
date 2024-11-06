@@ -14,7 +14,7 @@ impl Display for Operation {
         let sign = match &self {
             Operation::Plus => '+',
             Operation::Minus => '-',
-            Operation::Mul => '*',
+            Operation::Mul => '×',
             Operation::Div => '/',
         };
         write!(f, "{sign}")
