@@ -89,11 +89,8 @@ fn print_results(exercises: &Vec<Excercise>, duration: Duration) {
         .with(Width::increase(table.total_width()))
         .with(Alignment::center());
 
-    println!();
-    println!("{header}");
-    println!("{table}");
     println!(
-        "\n{correct}/{} correct, in {}.{}s",
+        "\n{header}\n{table}\n{correct}/{} correct, in {}.{}s",
         exercises.len(),
         duration.as_secs(),
         duration.subsec_millis()
