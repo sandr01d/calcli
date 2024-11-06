@@ -14,7 +14,7 @@ mod exercise;
 use exercise::Excercise;
 
 #[derive(Parser, Debug, Clone, Copy)]
-#[command(version, about, long_about=None)]
+#[command(version, about)]
 pub struct Cli {
     /// Number of excercises
     #[arg(short, long, default_value_t = 10)]
