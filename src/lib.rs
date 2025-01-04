@@ -55,7 +55,7 @@ fn print_results(exercises: &Vec<Excercise>, duration: Duration) {
 
     // builder for the header
     let mut builder = Builder::default();
-    // ansi escope codes are for bold text
+    // ansi escape codes are for bold text
     builder.push_record(["\x1B[1mResults\x1B[22m"]);
     let mut header = builder.build();
 
