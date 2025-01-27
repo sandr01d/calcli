@@ -34,7 +34,7 @@ pub struct Cli {
 /// Returns an error when either `Stdout::flush()` or `Stdin::read_line()` fail
 /// which would indicate an error on the underlying OS.
 pub fn run(args: &Cli) -> io::Result<()> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let mut exercises = Vec::with_capacity(args.count);
     let now = Instant::now();
     for _ in 0..args.count {
