@@ -17,12 +17,12 @@ pub struct Excercise {
 impl Excercise {
     /// Generates a new random exercise with the given limits for `lhs` and `rhs`
     pub fn new<R: Rng>(rng: &mut R, min: u8, max: u8) -> Excercise {
-        let op = rng.gen();
-        let lhs = rng.gen_range(min..=max);
+        let op = rng.random();
+        let lhs = rng.random_range(min..=max);
         let rhs = if op == Operation::Div {
             gen_divisor(rng, min, max, lhs)
         } else {
-            rng.gen_range(min..=max)
+            rng.random_range(min..=max)
         };
         Excercise {
             lhs,
@@ -68,10 +68,10 @@ fn gen_divisor<R: Rng>(rng: &mut R, min: u8, max: u8, dividend: u8) -> u8 {
     // min being bigger than dividend and thread would panic. In this special
     // case we allow the divisor to be bigger than the dividend.
     if dividend == 0 {
-        return rng.gen_range(min..=max);
+        return rng.random_range(min..=max);
     }
     loop {
-        let divisor = rng.gen_range(min..=dividend);
+        let divisor = rng.random_range(min..=dividend);
         if dividend % divisor == 0 {
             return divisor;
         }
