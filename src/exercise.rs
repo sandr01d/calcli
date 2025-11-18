@@ -72,7 +72,7 @@ fn gen_divisor<R: Rng>(rng: &mut R, min: u8, max: u8, dividend: u8) -> u8 {
     }
     loop {
         let divisor = rng.random_range(min..=dividend);
-        if dividend % divisor == 0 {
+        if dividend.is_multiple_of(divisor) {
             return divisor;
         }
     }
