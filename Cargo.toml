@@ -2,7 +2,7 @@
 name = "calcli"
 description = "A command line application, that helps you train mental calculation."
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 clap = { version = "4.5.53", features = ["derive"] }
