@@ -1,5 +1,5 @@
+use rand::{RngExt, distr::StandardUniform, prelude::Distribution};
 use std::fmt::Display;
-use rand::{distr::StandardUniform, prelude::Distribution, Rng};
 
 #[derive(PartialEq)]
 pub enum Operation {
@@ -22,7 +22,7 @@ impl Display for Operation {
 }
 
 impl Distribution<Operation> for StandardUniform {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Operation {
+    fn sample<R: RngExt + ?Sized>(&self, rng: &mut R) -> Operation {
         match rng.random_range(0..=3) {
             0 => Operation::Plus,
             1 => Operation::Minus,
