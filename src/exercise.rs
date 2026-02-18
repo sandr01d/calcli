@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 mod operation;
 use operation::Operation;
@@ -16,7 +16,7 @@ pub struct Excercise {
 
 impl Excercise {
     /// Generates a new random exercise with the given limits for `lhs` and `rhs`
-    pub fn new<R: Rng>(rng: &mut R, min: u8, max: u8) -> Excercise {
+    pub fn new<R: RngExt>(rng: &mut R, min: u8, max: u8) -> Excercise {
         let op = rng.random();
         let lhs = rng.random_range(min..=max);
         let rhs = if op == Operation::Div {
@@ -61,7 +61,7 @@ impl Excercise {
 /// * `max` maximum allowed value for the result (only relevant when
 ///   `dividend == 0`)
 /// * `dividend` the number to generate a divisor for
-fn gen_divisor<R: Rng>(rng: &mut R, min: u8, max: u8, dividend: u8) -> u8 {
+fn gen_divisor<R: RngExt>(rng: &mut R, min: u8, max: u8, dividend: u8) -> u8 {
     // Min must be at least 1, to avoid divisor becoming 0
     let min = min.max(1);
     // When the dividend is 0, the loop below would have an empty range, due to
